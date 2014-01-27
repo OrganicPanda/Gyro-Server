@@ -1,0 +1,22 @@
+{
+  "name": "Gyro-Server",
+  "version": "0.0.1",
+  "description": "A client and server for sharing gyroscope events bewtween clients",
+  "main": "server.js",
+  "dependencies": {
+    "express": "~3.4.8",
+    "socket.io": "~0.9.16",
+    "ejs": "~0.8.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OrganicPanda/Gyro-Server.git"
+  },
+  "author": "Steve Thomson",
+  "license": "MIT"
+}
