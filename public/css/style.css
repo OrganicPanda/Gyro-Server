@@ -18,6 +18,7 @@
   - Fluid width
   - Everything should be accessible to old IE
 */
+html { background-color: #BADA55; }
 html,
 body {
   margin: 0;

@@ -2,11 +2,19 @@
   'use strict';
 
   var socket = io.connect()
-    , target = document.getElementById('target')
-    , debugContainer = document.getElementById('debug');
+    , target = document.querySelector('body')
+    , debugContainer = document.getElementById('debug')
+    , debugMax = 10
+    , debugCurrent = 0;
 
   function debug(message) {
-    debugContainer.innerHTML = message;
+    //debugContainer.innerHTML = message;
+    console.log(debugCurrent, message);
+
+    if (debugCurrent++ > debugMax) {
+      debugCurrent = 0;
+      console.clear();
+    }
   }
 
   function render(state) {
@@ -18,28 +26,33 @@
       //           or the angle of the device screen if you may.
       // From http://kinderas.blogspot.co.uk/
       //      2011/06/accessing-gyroscope-and-accelerometer.html
-      target.style.webkitTransform = 'perspective(0) ' +
-        'rotateZ(' + state.alpha + 'deg) ' +
-        'rotateX(' + state.beta + 'deg) ' +
-        'rotateY(' + state.gamma + 'deg)';
+      var transform = 'perspective(0) ' +
+        'rotateZ(' + state.alpha + 'deg) ' + // This is right
+        'rotateX(' + (state.gamma * -1) + 'deg) ' +
+        'rotateY(' + (state.beta * -1) + 'deg)';
+
+      debug(transform);
+
+      target.style.webkitTransform = transform;
   }
 
   socket.on('message', function(data) {
-    debug(data.message);
-
     var message = JSON.parse(data.message)
-      , isGyro = ['alpha', 'beta', 'gamma'].every(function(key) {
-          return message.hasOwnProperty(key);
+      , keys = ['alpha', 'beta', 'gamma']
+      , isGyro = keys.every(function(key) {
+          return message.hasOwnProperty(key) && !isNaN(parseFloat(message[key]));
         });
 
     if (isGyro) {
-      render(message);
+      render(keys.map(function(key) {
+        return parseFloat(message[key]);
+      }));
     }
   });
 
   gyro.frequency = 100;
   gyro.startTracking(function(o) {
     socket.emit('message', JSON.stringify(o));
-    render(o);
+    //render(o);
   });
 })();

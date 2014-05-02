@@ -28,7 +28,7 @@ io.sockets.on('connection', function(socket) {
     socket.get('pseudo', function(error, name) {
       var data = { 'message' : message, pseudo : name };
       socket.broadcast.emit('message', data);
-      console.log('user ' + name + ' send this : ' + message);
+      //console.log('user ' + name + ' send this : ' + message);
     });
   });
 });
